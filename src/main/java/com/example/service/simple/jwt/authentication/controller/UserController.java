@@ -30,10 +30,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestBodyDto loginRequestBodyDto) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestBodyDto bodyDto) {
         log.info("start logging...");
-        String username = loginRequestBodyDto.getUsername();
-        String password = loginRequestBodyDto.getPassword();
+        String username = bodyDto.getUsername();
+        String password = bodyDto.getPassword();
         return userService.fetchByUserNameAndPwd(username, password)
                 .map(UserData::publicAttributes)
                 .map(tokenFactory::createNewToken)
