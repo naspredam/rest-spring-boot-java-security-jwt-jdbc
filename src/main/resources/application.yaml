@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
+    generate-ddl: off
+  datasource:
+    url: jdbc:mysql://localhost:3307/app?autoReconnect=true&useSSL=false
+    username: root
+    password: rootpasswd
+
+app:
+  name: issuer
+  jwt-token:
+    secret: blah
+    expiration-in-seconds: 2000
+    clock-skew-in-seconds: 300
