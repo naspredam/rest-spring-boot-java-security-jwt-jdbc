@@ -54,6 +54,7 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
         super.unsuccessfulAuthentication(request, response, failed);
+        response.addHeader("login-failure-message", failed.getMessage());
         log.warn("Authentication failed for the call '{}' with message: {} - Returning UNAUTHORIZED(401)",
                 request.getRequestURI(), failed.getMessage(), failed.getCause());
     }
