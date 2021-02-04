@@ -1,18 +1,22 @@
-package com.example.service.simple.jwt.authentication.model;
+package com.example.service.simple.jwt.authentication.config.authentication;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
-public class UserPrincipal implements UserDetails {
+import static com.example.service.simple.jwt.authentication.encryption.TokenClaimsKeys.USER_ID;
+import static com.example.service.simple.jwt.authentication.encryption.TokenClaimsKeys.USER_NAME;
+
+public class UserDetailsDto implements UserDetails {
 
     private final Long userId;
 
     private final String username;
 
-    public UserPrincipal(Long userId, String username) {
+    public UserDetailsDto(Long userId, String username) {
         this.userId = userId;
         this.username = username;
     }
@@ -22,13 +26,13 @@ public class UserPrincipal implements UserDetails {
         return Collections.emptyList();
     }
 
-    public Long getId() {
-        return userId;
-    }
-
     @Override
     public String getPassword() {
         return null;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     @Override
@@ -54,5 +58,11 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static UserDetailsDto from(Map<String, String> claims) {
+        Long userId = Long.parseLong(claims.get(USER_ID));
+        String username = claims.get(USER_NAME);
+        return new UserDetailsDto(userId, username);
     }
 }

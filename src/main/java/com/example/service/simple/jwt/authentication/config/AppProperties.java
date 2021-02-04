@@ -18,6 +18,7 @@ public class AppProperties {
     @Getter
     @Setter
     public static class JwtTokenProperties {
+
         private String secret;
 
         private long expirationInSeconds;

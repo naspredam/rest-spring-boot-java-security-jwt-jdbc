@@ -33,12 +33,4 @@ public class UserData {
     private String lastName;
 
     private String phone;
-
-    public Map<String, String> publicAttributes() {
-        return Map.of(
-                "user-id", String.valueOf(id),
-                "username", username
-        );
-    }
-
 }
