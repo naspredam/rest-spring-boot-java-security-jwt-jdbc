@@ -1,16 +1,11 @@
 package com.example.service.simple.jwt.authentication.mapper;
 
-import com.example.service.simple.jwt.authentication.controller.dto.LoginResponseDto;
 import com.example.service.simple.jwt.authentication.controller.dto.UserProfileDto;
 import com.example.service.simple.jwt.authentication.repository.data.UserData;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-
-    public LoginResponseDto loginResponse(String token) {
-        return LoginResponseDto.of(token);
-    }
 
     public UserProfileDto userDetails(UserData userData) {
         return UserProfileDto.builder()

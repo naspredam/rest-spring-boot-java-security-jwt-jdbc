@@ -1,8 +1,11 @@
 package com.example.service.simple.jwt.authentication.service;
 
+import com.example.service.simple.jwt.authentication.config.authentication.UserDetailsDto;
 import com.example.service.simple.jwt.authentication.encryption.TokenFactory;
 import com.example.service.simple.jwt.authentication.repository.UserRepository;
 import com.example.service.simple.jwt.authentication.repository.data.UserData;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +34,10 @@ public class UserService {
                 .map(tokenFactory::createNewToken);
     }
 
-    public Optional<UserData> fetchUserByPrincipal(Long userId) {
-        return userRepository.findById(userId);
+    public Optional<UserData> fetchLoggedUserData() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsDto principal = (UserDetailsDto) authentication.getPrincipal();
+        return userRepository.findById(principal.getUserId());
     }
 
 }

@@ -37,7 +37,7 @@ public class TokenFactory {
     }
 
     private Claims buildClaims(UserData userData) {
-        Map<String, String> attributes = Map.of(
+        var userAttributes = Map.of(
                 USER_ID, String.valueOf(userData.getId()),
                 USER_NAME, userData.getUsername());
 
@@ -45,12 +45,12 @@ public class TokenFactory {
                 .setIssuer(appProperties.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(Timestamp.valueOf(expirationDateAt()));
-        claims.putAll(attributes);
+        claims.putAll(userAttributes);
         return claims;
     }
 
     private LocalDateTime expirationDateAt() {
-        AppProperties.JwtTokenProperties jwtTokenProperties = appProperties.getJwtToken();
+        var jwtTokenProperties = appProperties.getJwtToken();
         if (jwtTokenProperties.getExpirationInSeconds() > 0) {
             return LocalDateTime.now()
                     .plusSeconds(jwtTokenProperties.getExpirationInSeconds());

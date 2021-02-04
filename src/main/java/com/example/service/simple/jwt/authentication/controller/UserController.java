@@ -1,6 +1,5 @@
 package com.example.service.simple.jwt.authentication.controller;
 
-import com.example.service.simple.jwt.authentication.config.authentication.UserDetailsDto;
 import com.example.service.simple.jwt.authentication.controller.dto.LoginRequestBodyDto;
 import com.example.service.simple.jwt.authentication.controller.dto.LoginResponseDto;
 import com.example.service.simple.jwt.authentication.controller.dto.UserProfileDto;
@@ -9,7 +8,6 @@ import com.example.service.simple.jwt.authentication.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +35,7 @@ public class UserController {
         String username = bodyDto.getUsername();
         String password = bodyDto.getPassword();
         return userService.createTokenByUsernameAndPwd(username, password)
-                .map(userMapper::loginResponse)
+                .map(LoginResponseDto::of)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .header("message", "user and password not found...")
@@ -45,10 +43,9 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfileDto> retrievePrincipal(Authentication authentication) {
-        log.info("retrievePrincipal - Start...");
-        UserDetailsDto principal = (UserDetailsDto) authentication.getPrincipal();
-        return userService.fetchUserByPrincipal(principal.getUserId())
+    public ResponseEntity<UserProfileDto> retrieveMyUserInformation() {
+        log.info("retrieveMyUserInformation - Start...");
+        return userService.fetchLoggedUserData()
                 .map(userMapper::userDetails)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound()

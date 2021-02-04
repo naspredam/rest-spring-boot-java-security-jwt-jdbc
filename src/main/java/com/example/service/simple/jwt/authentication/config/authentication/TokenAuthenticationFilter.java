@@ -1,6 +1,5 @@
 package com.example.service.simple.jwt.authentication.config.authentication;
 
-import com.example.service.simple.jwt.authentication.encryption.TokenParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,11 +20,8 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer";
 
-    private final TokenParser tokenParser;
-
-    public TokenAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher, TokenParser tokenParser) {
-        super(requiresAuthenticationRequestMatcher);
-        this.tokenParser = tokenParser;
+    public TokenAuthenticationFilter(RequestMatcher requestMatcher) {
+        super(requestMatcher);
     }
 
     @Override
@@ -40,23 +36,25 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
         String token = authHeader.replace(BEARER, "").trim();
         log.info("attemptAuthentication - token = {}", token);
 
-        try {
-            UserDetailsDto principalDto = UserDetailsDto.from(tokenParser.parseClaimsAsMap(token));
-            Authentication auth = new UsernamePasswordAuthenticationToken(principalDto, token);
-            return getAuthenticationManager().authenticate(auth);
-        } catch (Exception ex) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw ex;
-        }
+        Authentication auth = new UsernamePasswordAuthenticationToken(token, token);
+        return getAuthenticationManager().authenticate(auth);
     }
 
     @Override
-    protected void successfulAuthentication(
-            final HttpServletRequest request,
-            final HttpServletResponse response,
-            final FilterChain chain,
-            final Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
         chain.doFilter(request, response);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException, ServletException {
+        super.unsuccessfulAuthentication(request, response, failed);
+        log.warn("Authentication failed for the call '{}' with message: {} - Returning UNAUTHORIZED(401)",
+                request.getRequestURI(), failed.getMessage(), failed.getCause());
     }
 }
