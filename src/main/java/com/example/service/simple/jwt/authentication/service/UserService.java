@@ -1,6 +1,6 @@
 package com.example.service.simple.jwt.authentication.service;
 
-import com.example.service.simple.jwt.authentication.config.authentication.UserDetailsDto;
+import com.example.service.simple.jwt.authentication.config.UserDetailsDto;
 import com.example.service.simple.jwt.authentication.encryption.TokenFactory;
 import com.example.service.simple.jwt.authentication.repository.UserRepository;
 import com.example.service.simple.jwt.authentication.repository.data.UserData;

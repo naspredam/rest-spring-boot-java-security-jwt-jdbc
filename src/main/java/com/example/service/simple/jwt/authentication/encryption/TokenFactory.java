@@ -7,8 +7,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.compression.GzipCompressionCodec;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 
@@ -20,6 +20,7 @@ import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 public class TokenFactory {
 
     private static final GzipCompressionCodec COMPRESSION_CODEC = new GzipCompressionCodec();
+    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
 
     private final AppProperties appProperties;
 
@@ -41,21 +42,20 @@ public class TokenFactory {
                 USER_ID, String.valueOf(userData.getId()),
                 USER_NAME, userData.getUsername());
 
+        Date now = new Date();
         Claims claims = Jwts.claims()
                 .setIssuer(appProperties.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(Timestamp.valueOf(expirationDateAt()));
+                .setIssuedAt(now)
+                .setExpiration(expirationDateAt());
         claims.putAll(userAttributes);
         return claims;
     }
 
-    private LocalDateTime expirationDateAt() {
-        var jwtTokenProperties = appProperties.getJwtToken();
-        if (jwtTokenProperties.getExpirationInSeconds() > 0) {
-            return LocalDateTime.now()
-                    .plusSeconds(jwtTokenProperties.getExpirationInSeconds());
-        }
-        return LocalDateTime.now()
-                .plusSeconds(86400);
+    private Date expirationDateAt() {
+        var jwtTokenProps = appProperties.getJwtToken();
+        var expirationDateTime = jwtTokenProps.getExpirationInSeconds() > 0 ?
+                LocalDateTime.now().plusSeconds(jwtTokenProps.getExpirationInSeconds()) :
+                LocalDateTime.now().plusSeconds(86400);
+        return Date.from(expirationDateTime.atZone(DEFAULT_ZONE_ID).toInstant());
     }
 }

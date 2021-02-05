@@ -1,4 +1,4 @@
-package com.example.service.simple.jwt.authentication.config.authentication;
+package com.example.service.simple.jwt.authentication.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;

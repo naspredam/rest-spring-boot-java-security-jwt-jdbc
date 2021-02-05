@@ -1,7 +1,5 @@
 package com.example.service.simple.jwt.authentication.config;
 
-import com.example.service.simple.jwt.authentication.config.authentication.TokenAuthenticationFilter;
-import com.example.service.simple.jwt.authentication.config.authentication.TokenAuthenticationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
@@ -74,6 +74,11 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     AuthenticationFailureHandler failureHandler() {
         AuthenticationEntryPoint authenticationEntryPoint = new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
         return new AuthenticationEntryPointFailureHandler(authenticationEntryPoint);
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

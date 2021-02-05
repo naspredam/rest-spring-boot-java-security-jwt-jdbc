@@ -1,4 +1,4 @@
-package com.example.service.simple.jwt.authentication.config.authentication;
+package com.example.service.simple.jwt.authentication.config;
 
 import com.example.service.simple.jwt.authentication.encryption.TokenParser;
 import io.jsonwebtoken.ExpiredJwtException;
