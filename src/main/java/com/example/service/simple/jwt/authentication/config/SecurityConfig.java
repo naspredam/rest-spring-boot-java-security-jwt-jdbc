@@ -27,7 +27,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final RequestMatcher AUTHENTICATION_FREE_MATCHERS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/login", HttpMethod.POST.name())
+            new AntPathRequestMatcher("/login", HttpMethod.POST.name()),
+            new AntPathRequestMatcher("/users", HttpMethod.POST.name())
     );
 
     private static final RequestMatcher AUTHENTICATION_MATCHERS = new NegatedRequestMatcher(AUTHENTICATION_FREE_MATCHERS);

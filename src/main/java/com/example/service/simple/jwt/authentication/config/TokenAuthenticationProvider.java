@@ -1,7 +1,7 @@
 package com.example.service.simple.jwt.authentication.config;
 
-import com.example.service.simple.jwt.authentication.encryption.TokenParser;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.example.service.simple.jwt.authentication.infrastructure.encryption.TokenParser;
+import com.example.service.simple.jwt.authentication.infrastructure.repository.AuthenticationLogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +18,12 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
 
     private final TokenParser tokenParser;
 
-    public TokenAuthenticationProvider(TokenParser tokenParser) {
+    private final AuthenticationLogRepository authenticationLogRepository;
+
+    public TokenAuthenticationProvider(TokenParser tokenParser,
+                                       AuthenticationLogRepository authenticationLogRepository) {
         this.tokenParser = tokenParser;
+        this.authenticationLogRepository = authenticationLogRepository;
     }
 
     @Override
@@ -27,14 +31,20 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
         log.info("retrieveUser - calling...");
         String token = String.valueOf(authentication.getCredentials());
         try {
-            Map<String, String> claims = tokenParser.parseClaimsAsMap(token);
-            return UserDetailsDto.from(claims);
-        } catch (ExpiredJwtException e) {
+            Map<String, Object> claims = tokenParser.parseClaimsAsMap(token);
+            return AuthenticatedUser.from(claims);
+        } catch (Exception e) {
             throw new CredentialsExpiredException(e.getMessage(), e);
         }
     }
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        AuthenticatedUser authenticatedUser = (AuthenticatedUser) userDetails;
+        Long authLogId = authenticatedUser.getAuthLogId();
+        boolean existValidAuthentication = authenticationLogRepository.existsByIdAndInvalidatedFalse(authLogId);
+        if (!existValidAuthentication) {
+            throw new CredentialsExpiredException("No valid authentication stored on the database...");
+        }
     }
 }

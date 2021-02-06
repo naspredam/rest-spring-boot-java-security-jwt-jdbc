@@ -44,4 +44,59 @@ databaseChangeLog:
               - column:
                   name: phone
                   type: VARCHAR(20)
+              - column:
+                  name: created_at
+                  type: datetime
+              - column:
+                  name: updated_at
+                  type: datetime
             tableName: users
+  - changeSet:
+      id: create-table-auth-log
+      author: dev
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: user_authentication_log
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: token
+                  type: text
+              - column:
+                  constraints:
+                    nullable: false
+                  name: expiration_date_time
+                  type: datetime
+              - column:
+                  constraints:
+                    nullable: false
+                  name: invalidated
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: created_at
+                  type: datetime
+              - column:
+                  name: updated_at
+                  type: datetime
+            tableName: user_authentication_log
+        - addForeignKeyConstraint:
+            referencedColumnNames: id
+            referencedTableName: users
+            baseColumnNames: user_id
+            baseTableName: user_authentication_log
+            constraintName: fk_user_authentication_user_id
