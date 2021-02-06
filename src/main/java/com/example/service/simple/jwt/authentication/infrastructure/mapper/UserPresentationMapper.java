@@ -25,6 +25,7 @@ public class UserPresentationMapper {
     public UserProfileDto presentationUserDetails(User user) {
         UserPersonalInfo personalInfo = user.getPersonalInfo();
         return UserProfileDto.builder()
+                .id(user.getId())
                 .username(user.getLoginInfo().getUsername())
                 .cpf(personalInfo.getCpf())
                 .firstName(personalInfo.getFirstName())
