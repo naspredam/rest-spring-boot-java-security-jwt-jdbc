@@ -3,7 +3,6 @@ package com.example.service.simple.jwt.authentication.infrastructure.controller;
 import com.example.service.simple.jwt.authentication.application.usecase.CreateNewUserUseCase;
 import com.example.service.simple.jwt.authentication.application.usecase.FetchUserDetailsUseCase;
 import com.example.service.simple.jwt.authentication.domain.User;
-import com.example.service.simple.jwt.authentication.domain.UserLoginInfo;
 import com.example.service.simple.jwt.authentication.infrastructure.controller.dto.CreateUserBodyDto;
 import com.example.service.simple.jwt.authentication.infrastructure.controller.dto.UserProfileDto;
 import com.example.service.simple.jwt.authentication.infrastructure.mapper.UserPresentationMapper;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Slf4j
 @RestController
@@ -40,7 +41,8 @@ public class UserController {
         User userFromRequest = userPresentationMapper.domainUser(bodyDto);
         User user = createNewUserUseCase.createUser(userFromRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userPresentationMapper.presentationUserDetails(user));
+                .body(userPresentationMapper.presentationUserDetails(user)
+                        .add(linkTo(methodOn(UserController.class).retrieveMyUserInformation()).withSelfRel()));
     }
 
     @GetMapping("/me")
@@ -48,6 +50,7 @@ public class UserController {
         log.info("retrieveMyUserInformation - Start...");
         return fetchUserDetailsUseCase.fetchLoggedUserData()
                 .map(userPresentationMapper::presentationUserDetails)
+                .map(dto -> dto.add(linkTo(methodOn(UserController.class).retrieveMyUserInformation()).withSelfRel()))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound()
                         .header("message", "Logged user not found...")

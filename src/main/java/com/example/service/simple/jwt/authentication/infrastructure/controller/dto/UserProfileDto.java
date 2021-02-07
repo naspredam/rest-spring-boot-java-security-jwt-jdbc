@@ -2,10 +2,11 @@ package com.example.service.simple.jwt.authentication.infrastructure.controller.
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Builder
-public class UserProfileDto {
+public class UserProfileDto extends RepresentationModel<UserProfileDto> {
 
     private final Long id;
 

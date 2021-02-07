@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Slf4j
 @RestController
 public class UserSecurityController {
@@ -38,6 +41,7 @@ public class UserSecurityController {
         UserLoginInfo userLoginInfo = UserLoginInfo.of(username, password);
         return loginUserUseCase.createAuthenticationToken(userLoginInfo)
                 .map(LoginResponseDto::of)
+                .map(dto -> dto.add(linkTo(methodOn(UserController.class).retrieveMyUserInformation()).withSelfRel()))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .header("message", "user and password not found...")
