@@ -1,10 +1,12 @@
 package com.example.service.simple.jwt.authentication.infrastructure.controller.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
+@Setter
 public class CreateUserBodyDto {
 
     @NotNull
@@ -14,7 +16,7 @@ public class CreateUserBodyDto {
     private String password;
 
     @NotNull
-    private String cpf;
+    private String nationalId;
 
     @NotNull
     private String firstName;

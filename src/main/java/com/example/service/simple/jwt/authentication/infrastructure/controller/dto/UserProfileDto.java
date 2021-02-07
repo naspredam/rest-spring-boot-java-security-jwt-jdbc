@@ -12,7 +12,7 @@ public class UserProfileDto extends RepresentationModel<UserProfileDto> {
 
     private final String username;
 
-    private final String cpf;
+    private final String nationalId;
 
     private final String firstName;
 

@@ -20,7 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Slf4j
 @RestController
-public class UserController {
+class UserController {
 
     private final CreateNewUserUseCase createNewUserUseCase;
 
@@ -28,7 +28,7 @@ public class UserController {
 
     private final UserPresentationMapper userPresentationMapper;
 
-    public UserController(CreateNewUserUseCase createNewUserUseCase,
+    UserController(CreateNewUserUseCase createNewUserUseCase,
                           FetchUserDetailsUseCase fetchUserDetailsUseCase,
                           UserPresentationMapper userPresentationMapper) {
         this.createNewUserUseCase = createNewUserUseCase;
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserProfileDto> createUser(@RequestBody @Valid CreateUserBodyDto bodyDto) {
+    ResponseEntity<UserProfileDto> createUser(@RequestBody @Valid CreateUserBodyDto bodyDto) {
         User userFromRequest = userPresentationMapper.domainUser(bodyDto);
         User user = createNewUserUseCase.createUser(userFromRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfileDto> retrieveMyUserInformation() {
+    ResponseEntity<UserProfileDto> retrieveMyUserInformation() {
         log.info("retrieveMyUserInformation - Start...");
         return fetchUserDetailsUseCase.fetchLoggedUserData()
                 .map(userPresentationMapper::presentationUserDetails)

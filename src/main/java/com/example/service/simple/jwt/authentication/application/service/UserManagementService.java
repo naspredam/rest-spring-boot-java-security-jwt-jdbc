@@ -11,12 +11,12 @@ import com.example.service.simple.jwt.authentication.infrastructure.repository.d
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
-public class UserManagementService implements CreateNewUserUseCase, FetchUserDetailsUseCase {
+@Service
+class UserManagementService implements CreateNewUserUseCase, FetchUserDetailsUseCase {
 
     private final UserRepository userRepository;
 
@@ -24,7 +24,7 @@ public class UserManagementService implements CreateNewUserUseCase, FetchUserDet
 
     private final UserPersistenceMapper userPersistenceMapper;
 
-    public UserManagementService(UserRepository userRepository,
+    UserManagementService(UserRepository userRepository,
                                  PasswordEncoder passwordEncoder,
                                  UserPersistenceMapper userPersistenceMapper) {
         this.userRepository = userRepository;

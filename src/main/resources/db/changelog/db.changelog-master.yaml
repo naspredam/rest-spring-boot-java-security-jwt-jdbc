@@ -29,7 +29,7 @@ databaseChangeLog:
               - column:
                   constraints:
                     nullable: false
-                  name: cpf
+                  name: national_id
                   type: VARCHAR(11)
               - column:
                   constraints:

@@ -23,14 +23,14 @@ public class UserPersistenceMapper {
                 .password(user.getLoginInfo().getPassword())
                 .firstName(user.getPersonalInfo().getFirstName())
                 .lastName(user.getPersonalInfo().getLastName())
-                .cpf(user.getPersonalInfo().getCpf())
+                .nationalId(user.getPersonalInfo().getNationalId())
                 .phone(user.getPersonalInfo().getPhone())
                 .build();
     }
 
     private UserPersonalInfo buildPersonalInfo(UserData userData) {
         return UserPersonalInfo.builder()
-                .cpf(userData.getCpf())
+                .nationalId(userData.getNationalId())
                 .firstName(userData.getFirstName())
                 .lastName(userData.getLastName())
                 .phone(userData.getPhone())

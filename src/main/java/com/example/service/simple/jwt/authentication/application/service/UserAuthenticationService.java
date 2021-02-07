@@ -12,13 +12,13 @@ import com.example.service.simple.jwt.authentication.infrastructure.repository.d
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Component
-public class UserAuthenticationService implements LoginUserUseCase, LogoutUserUseCase {
+@Service
+class UserAuthenticationService implements LoginUserUseCase, LogoutUserUseCase {
 
     private final UserRepository userRepository;
 
@@ -28,7 +28,7 @@ public class UserAuthenticationService implements LoginUserUseCase, LogoutUserUs
 
     private final TokenProvider tokenProvider;
 
-    public UserAuthenticationService(UserRepository userRepository,
+    UserAuthenticationService(UserRepository userRepository,
                                      AuthenticationLogRepository authenticationLogRepository,
                                      PasswordEncoder passwordEncoder,
                                      TokenProvider tokenProvider) {

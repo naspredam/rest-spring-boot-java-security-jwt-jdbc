@@ -21,20 +21,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
 @RestController
-public class UserSecurityController {
+class UserSecurityController {
 
     private final LoginUserUseCase loginUserUseCase;
 
     private final LogoutUserUseCase logoutUserUseCase;
 
-    public UserSecurityController(LoginUserUseCase loginUserUseCase,
+    UserSecurityController(LoginUserUseCase loginUserUseCase,
                                   LogoutUserUseCase logoutUserUseCase) {
         this.loginUserUseCase = loginUserUseCase;
         this.logoutUserUseCase = logoutUserUseCase;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestBodyDto bodyDto) {
+    ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestBodyDto bodyDto) {
         log.info("start logging...");
         String username = bodyDto.getUsername();
         String password = bodyDto.getPassword();
@@ -44,13 +44,13 @@ public class UserSecurityController {
                 .map(dto -> dto.add(linkTo(methodOn(UserController.class).retrieveMyUserInformation()).withSelfRel()))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .header("message", "user and password not found...")
+                        .header("message", "User and password incorrect...")
                         .build());
     }
 
     @GetMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout() {
+    void logout() {
         logoutUserUseCase.invalidateSession();
     }
 }

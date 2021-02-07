@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class UserPersonalInfo {
 
-    private final String cpf;
+    private final String nationalId;
 
     private final String firstName;
 

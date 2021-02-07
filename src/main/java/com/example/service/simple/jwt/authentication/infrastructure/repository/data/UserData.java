@@ -31,7 +31,7 @@ public class UserData {
 
     private String password;
 
-    private String cpf;
+    private String nationalId;
 
     private String firstName;
 
