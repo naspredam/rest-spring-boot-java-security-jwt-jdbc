@@ -17,6 +17,7 @@ Build on:
 - language: Java 11+
 - framework: spring-boot (+ security and liquibase for database migrations)
 - database: MySQL
+- hypermedia: Spring HATEOAS
 
 ## Resources / Endpoints
 
