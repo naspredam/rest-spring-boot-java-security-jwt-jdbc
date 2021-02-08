@@ -36,9 +36,7 @@ class UserSecurityController {
     @PostMapping("/login")
     ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestBodyDto bodyDto) {
         log.info("start logging...");
-        String username = bodyDto.getUsername();
-        String password = bodyDto.getPassword();
-        UserLoginInfo userLoginInfo = UserLoginInfo.of(username, password);
+        UserLoginInfo userLoginInfo = UserLoginInfo.of(bodyDto.getUsername(), bodyDto.getPassword());
         return loginUserUseCase.createAuthenticationToken(userLoginInfo)
                 .map(LoginResponseDto::of)
                 .map(dto -> dto.add(linkTo(methodOn(UserController.class).retrieveMyUserInformation()).withSelfRel()))
@@ -51,6 +49,6 @@ class UserSecurityController {
     @GetMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void logout() {
-        logoutUserUseCase.invalidateSession();
+        logoutUserUseCase.invalidateToken();
     }
 }

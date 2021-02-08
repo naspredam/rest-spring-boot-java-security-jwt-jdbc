@@ -46,7 +46,7 @@ class UserAuthenticationService implements LoginUserUseCase, LogoutUserUseCase {
     }
 
     @Override
-    public void invalidateSession() {
+    public void invalidateToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
         authenticationLogRepository.findById(authenticatedUser.getAuthLogId())
